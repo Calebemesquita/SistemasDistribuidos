@@ -14,7 +14,8 @@ class PingServer:
         self.loss_rate = 0.3
         self.avarange_delay = 100
         self.socket = None 
-        self.running = True 
+        self.running = True
+        self.socket.settimeout(1.0)
 
 
         #self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

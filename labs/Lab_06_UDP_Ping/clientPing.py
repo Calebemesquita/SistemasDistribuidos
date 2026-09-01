@@ -1,7 +1,7 @@
 import socket
 import time
 import sys
-
+# ta tendo erro quando o pacote é perdido
 class PingCliente:
     def __init__(self, ip_server, port, n):
         self.ip_server = ip_server
@@ -34,10 +34,10 @@ class PingCliente:
             
             time_recived = time.time()
             
-            rtt = (time_recived - time_recived) * 1000
+            rtt = (time_send - time_recived) * 1000
             self.rtt_list.append(rtt)
         
-            reply = data.decode("utf-8").strip()
+            reply = data.decode("utf-8", errors="ignore").strip()
             print(f"ping {self.ip_server}:{self.port} seq={num_seq} rtt={rtt:.2f}")
         
         except socket.timeout:
