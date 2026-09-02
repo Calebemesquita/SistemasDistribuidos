@@ -8,11 +8,11 @@ import sys
 
 
 class PingServer:
-    def __init__(self, host, port, loss_rate=0.3, avarange_delay=100):
+    def __init__(self, host, port, loss_rate=0.3, average_delay=100):
         self.host = host
         self.port = port
-        self.loss_rate = 0.3
-        self.avarange_delay = 100
+        self.loss_rate = loss_rate
+        self.average_delay = average_delay
         self.socket = None 
         self.running = True 
 
@@ -41,7 +41,7 @@ class PingServer:
                     continue
 
                 # Simulando o atrasso da rede 
-                delay = (random.random() * 2 * self.avarange_delay) / 1000.0
+                delay = (random.random() * 2 * self.average_delay) / 1000.0
                 time.sleep(delay)
 
                 self.socket.sendto(data, address)
