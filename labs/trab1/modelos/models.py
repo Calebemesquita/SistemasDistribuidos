@@ -5,9 +5,14 @@ from enum import Enum
 from typing import List, Optional
 
 '''Sistema de Coleta de Vulnerabilidades e Alertas de Rede'''
-
-# Modelo.py
-# Aqui devem ficar os dois POJOS
+'''
+Classes:
+Severidade: Enum para os niveis de severidade
+Ataque: Representa um ataque detectado
+RelatorioIncidente: Um relatorio de inciente que contem ataques
+ServicoRelatorios: Servico para gerenciar relatorios
+ServicoNotificacao: Servico para gerenciar notificacoes
+'''
 
 
 class Severidade(Enum):
@@ -17,31 +22,10 @@ class Severidade(Enum):
     CRITICA = 'CRITICA'
 
 
-'''
-to_dict() manual
-Quando quer controlar os campos retornados
-
-self.__dict__
-Quando quer obter os atributos armazenados
-
-dataclasses.asdict()
-Quando usa dataclass para representar dados
-'''
-
-
 class Ataque:
 
     # construtor da classe Ataque
-    def __init__(
-        self,
-        id: str,
-        ip_dst: str,
-        ip_source: str,
-        incident_type: str,
-        severity: Severidade | str,
-        thetime: float,
-        desc: str,
-    ):
+    def __init__( self, id: str, ip_dst: str, ip_source: str, incident_type: str, severity: Severidade | str, thetime: float, desc: str):
         self.id = id
         self.ip_dst = ip_dst
         self.ip_source = ip_source
@@ -50,32 +34,9 @@ class Ataque:
         self.thetime = thetime
         self.desc = desc
 
-
-
-
-    '''
-    @staticmethod
-    def _normalizar_severidade(severity: Severidade | str) -> Severidade:
-        if isinstance(severity, Severidade):
-            return severity
-
-        if isinstance(severity, str):
-            return Severidade[severity.upper()]
-
-        raise ValueError(f'Severidade inválida: {severity}')
-    '''
-
     @staticmethod
     def novo(ip_dst, ip_source, incident_type, severity, thetime, desc):
-        return Ataque(
-            id=str(uuid.uuid4()),
-            ip_dst=ip_dst,
-            ip_source=ip_source,
-            incident_type=incident_type,
-            severity=severity,
-            thetime=thetime,
-            desc=desc,
-        )
+        return Ataque(id=str(uuid.uuid4()), ip_dst=ip_dst, ip_source=ip_source, incident_type=incident_type, severity=severity, thetime=thetime, desc=desc)
 
     ''''
     Pegamos objeto da classe, e transfromamos em um dict python
@@ -97,39 +58,7 @@ class Ataque:
     '''
     @staticmethod
     def from_dict(d: dict) -> 'Ataque':
-        return Ataque(
-            id=d['id'],
-            ip_dst=d['ip_destino'],
-            ip_source=d['ip_origem'],
-            incident_type=d['tipo_alerta'],
-            severity=d.get('severidade', Severidade.BAIXA),
-            thetime=d.get('tempo', time.time()),
-            desc=d.get('desc', ''),
-        )
-
-
-'''
-    def to_pack(self) -> bytes:
-
-    def un_pack():
-
-
-    def read_file(self, arquivo_name):
-        arquivo = open(arquivo_name, 'r')
-
-        conteudo = arquivo.read()
-        print(conteudo)
-
-
-    def write_file(self, arquivo_name, input_arquivo):
-        arquivo = open(arquivo_name, 'w')
-        arquivo.write(input_arquivo)
-        arquivo.close()
-'''
-
-
-
-
+        return Ataque( id=d['id'], ip_dst=d['ip_destino'], ip_source=d['ip_origem'], incident_type=d['tipo_alerta'], severity=d.get('severidade', Severidade.BAIXA), thetime=d.get('tempo', time.time()), desc=d.get('desc', ''))
 
 
 
@@ -158,13 +87,7 @@ class RelatorioIncidente:
 
     @staticmethod
     def from_dict(d: dict) -> 'RelatorioIncidente':
-        relatorio = RelatorioIncidente(
-            id_relatorio=d['id_relatorio'],
-            num_ataques=d['num_ataques'],
-            gerado_data=d['gerado_data'],
-            gerado_por=d['gerado_por'],
-        )
-
+        relatorio = RelatorioIncidente(id_relatorio=d['id_relatorio'], num_ataques=d['num_ataques'], gerado_data=d['gerado_data'], gerado_por=d['gerado_por'])
         relatorio.ataques = [Ataque.from_dict(a) for a in d.get('ataques', [])]
         return relatorio
 
@@ -179,12 +102,7 @@ class ServicoRelatorios:
 
  
     def criar_relatorio(self, gerado_por: str, ataques: Optional[List[Ataque]] = None) -> RelatorioIncidente:
-        relatorio = RelatorioIncidente(
-            id_relatorio=str(uuid.uuid4()),
-            gerado_por=gerado_por,
-            gerado_data=datetime.now().timestamp(),
-            ataques=ataques or [],
-        )
+        relatorio = RelatorioIncidente(id_relatorio=str(uuid.uuid4()), gerado_por=gerado_por, gerado_data=datetime.now().timestamp(), ataques=ataques or [])
         self._relatorios[relatorio.id_relatorio] = relatorio
         return relatorio
     
@@ -229,3 +147,48 @@ class ServicoNotificacao:
     def total_inscritos(self) -> int:
         return len(self._inscritos)
  
+
+# Comentarios anotações dev
+
+
+'''
+to_dict() manual
+Quando quer controlar os campos retornados
+
+self.__dict__
+Quando quer obter os atributos armazenados
+
+dataclasses.asdict()
+Quando usa dataclass para representar dados
+'''
+
+
+'''
+    def to_pack(self) -> bytes:
+
+    def un_pack():
+
+
+    def read_file(self, arquivo_name):
+        arquivo = open(arquivo_name, 'r')
+
+        conteudo = arquivo.read()
+        print(conteudo)
+
+
+    def write_file(self, arquivo_name, input_arquivo):
+        arquivo = open(arquivo_name, 'w')
+        arquivo.write(input_arquivo)
+        arquivo.close()
+'''
+'''
+    @staticmethod
+    def _normalizar_severidade(severity: Severidade | str) -> Severidade:
+        if isinstance(severity, Severidade):
+            return severity
+
+        if isinstance(severity, str):
+            return Severidade[severity.upper()]
+
+        raise ValueError(f'Severidade inválida: {severity}')
+'''
