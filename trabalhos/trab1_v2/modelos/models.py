@@ -1,11 +1,12 @@
 import time
-import datetime
+from datetime import datetime
 import uuid
 from enum import Enum
 from typing import List, Optional
 
 '''Sistema de Coleta de Vulnerabilidades e Alertas de Rede'''
 '''
+Duas POJO duas serviço
 Classes:
 Severidade: Enum para os niveis de severidade
 Ataque: Representa um ataque detectado
@@ -38,6 +39,14 @@ class Ataque:
     def novo(ip_dst, ip_source, incident_type, severity, thetime, desc):
         return Ataque(id=str(uuid.uuid4()), ip_dst=ip_dst, ip_source=ip_source, incident_type=incident_type, severity=severity, thetime=thetime, desc=desc)
 
+    @staticmethod
+    def _normalizar_severidade(severity: Severidade | str) -> Severidade:
+        if isinstance(severity, Severidade):
+            return severity
+        if isinstance(severity, str):
+            return Severidade[severity.upper()]
+        raise ValueError(f"Severidade inválida: {severity}")
+
     ''''
     Pegamos objeto da classe, e transfromamos em um dict python
     Para depois converter em json
@@ -61,11 +70,17 @@ class Ataque:
         return Ataque( id=d['id'], ip_dst=d['ip_destino'], ip_source=d['ip_origem'], incident_type=d['tipo_alerta'], severity=d.get('severidade', Severidade.BAIXA), thetime=d.get('tempo', time.time()), desc=d.get('desc', ''))
 
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Ataque):
+            return False
+        return (self.id == other.id and self.ip_source == other.ip_source and self.ip_dst == other.ip_dst and self.incident_type == other.incident_type)
+
+
 
 
 
 class RelatorioIncidente:
-    def __init__( self, id_relatorio: str,num_ataques: str, gerado_data: float, gerado_por: str, ataques: Optional[List[Ataque]] = None):
+    def __init__( self, id_relatorio: str, num_ataques: int, gerado_data: float, gerado_por: str, ataques: Optional[List[Ataque]] = None):
         self.id_relatorio = id_relatorio
         self.num_ataques = num_ataques
         self.gerado_data = gerado_data
@@ -90,105 +105,3 @@ class RelatorioIncidente:
         relatorio = RelatorioIncidente(id_relatorio=d['id_relatorio'], num_ataques=d['num_ataques'], gerado_data=d['gerado_data'], gerado_por=d['gerado_por'])
         relatorio.ataques = [Ataque.from_dict(a) for a in d.get('ataques', [])]
         return relatorio
-
-
-
-
-
-class ServicoRelatorios:
- 
-    def __init__(self):
-        self._relatorios: dict = {}
-
- 
-    def criar_relatorio(self, gerado_por: str, ataques: Optional[List[Ataque]] = None) -> RelatorioIncidente:
-        relatorio = RelatorioIncidente(id_relatorio=str(uuid.uuid4()), gerado_por=gerado_por, gerado_data=datetime.now().timestamp(), ataques=ataques or [])
-        self._relatorios[relatorio.id_relatorio] = relatorio
-        return relatorio
-    
- 
-    def buscar_por_id(self, id_relatorio: str) -> Optional[RelatorioIncidente]:
-        return self._relatorios.get(id_relatorio)
- 
-    def buscar_por_severidade(self, severidade: Severidade) -> List[Ataque]:
-        encontrados = []
-        for relatorio in self._relatorios.values():
-            encontrados.extend(
-                a for a in relatorio.ataques if a.severidade == severidade
-            )
-        return encontrados
- 
-    def buscar_por_periodo(self, inicio: float, fim: float) -> List[RelatorioIncidente]:
-        return [r for r in self._relatorios.values() if inicio <= r.gerado_data <= fim]
- 
-    def listar_todos(self) -> List[RelatorioIncidente]:
-        return list(self._relatorios.values())
- 
-
-
- 
-class ServicoNotificacao:
-    def __init__(self):
-        self._inscritos: set = set()
- 
-    def inscrever(self, cliente_id: str) -> None:
-        self._inscritos.add(cliente_id)
- 
-    def desinscrever(self, cliente_id: str) -> None:
-        self._inscritos.discard(cliente_id)
- 
-    def montar_alerta(self, tipo: str, mensagem: str) -> dict:
-        return {
-            "tipo": tipo,
-            "mensagem": mensagem,
-            "timestamp": datetime.now().timestamp(),
-        }
- 
-    def total_inscritos(self) -> int:
-        return len(self._inscritos)
- 
-
-# Comentarios anotações dev
-
-
-'''
-to_dict() manual
-Quando quer controlar os campos retornados
-
-self.__dict__
-Quando quer obter os atributos armazenados
-
-dataclasses.asdict()
-Quando usa dataclass para representar dados
-'''
-
-
-'''
-    def to_pack(self) -> bytes:
-
-    def un_pack():
-
-
-    def read_file(self, arquivo_name):
-        arquivo = open(arquivo_name, 'r')
-
-        conteudo = arquivo.read()
-        print(conteudo)
-
-
-    def write_file(self, arquivo_name, input_arquivo):
-        arquivo = open(arquivo_name, 'w')
-        arquivo.write(input_arquivo)
-        arquivo.close()
-'''
-'''
-    @staticmethod
-    def _normalizar_severidade(severity: Severidade | str) -> Severidade:
-        if isinstance(severity, Severidade):
-            return severity
-
-        if isinstance(severity, str):
-            return Severidade[severity.upper()]
-
-        raise ValueError(f'Severidade inválida: {severity}')
-'''

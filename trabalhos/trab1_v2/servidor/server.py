@@ -8,6 +8,7 @@ from ..servicos.sevice import ServicoRelatorios
 
 HOST, PORTA = "127.0.0.1", 5051
 servico = ServicoRelatorios()
+_lock_servico = threading.Lock()
 
 
 def processar_requisicao(requisicao: dict) -> dict:
@@ -17,7 +18,8 @@ def processar_requisicao(requisicao: dict) -> dict:
 
         params = requisicao["parametros"]
         ataques = [Ataque.from_dict(item) for item in params.get("ataques", [])]
-        relatorio = servico.criar_relatorio(params["gerado_por"], ataques)
+        with _lock_servico:
+            relatorio = servico.criar_relatorio(params["gerado_por"], ataques)
 
         return {"sucesso": True, "relatorio": relatorio.to_dict()}
     except (KeyError, TypeError, ValueError) as erro:
@@ -25,15 +27,22 @@ def processar_requisicao(requisicao: dict) -> dict:
 
 
 def atender_cliente(conexao, endereco):
+    print(f"\n SERVER ->  Conexão tcp estabelecida com o cliente {endereco}.")
     with conexao, conexao.makefile("rwb") as fluxo:
         linha = fluxo.readline()
         if not linha:
             return
+        
         requisicao = json.loads(linha.decode("utf-8"))
+        print(f"[SERVIDOR] Mensagem de request desempacotada com sucess a pperação: {requisicao.get('operacao')}")
+        
         resposta = processar_requisicao(requisicao)
+
+        print("SERVER -> Empacotando mensagem de reply para enviar ao cliente...")
 
         fluxo.write((json.dumps(resposta) + "\n").encode("utf-8"))
         fluxo.flush()
+        print("SERVER ->  Reply enviado e conexão encerrada")
 
 
 def executar(host: str = HOST, porta: int = PORTA) -> None:
