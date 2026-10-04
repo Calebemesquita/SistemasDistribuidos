@@ -165,6 +165,7 @@ class RelatorioIncidente:
     def to_dict(self) -> dict:
         return {
             'id': self.getId(),
+
             'incidente_id': self.getIncidente_id(),
             'analista': self.getAnalista(),
             'conclusao': self.getConclusao(),
