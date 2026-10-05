@@ -2,10 +2,7 @@ import io
 import json
 import struct
 
-if __package__ and "." in __package__:
-    from ..POJO import RelatorioIncidente
-else:
-    from POJO import RelatorioIncidente
+from POJO import RelatorioIncidente
 
 
 class IncidenteInputStream(io.RawIOBase):

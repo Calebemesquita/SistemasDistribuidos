@@ -1,5 +1,5 @@
 from typing import Optional
-from ..POJO import Incidente
+from POJO import Incidente
 
 
 class ServicoIncidente:

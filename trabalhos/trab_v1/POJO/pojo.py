@@ -44,13 +44,14 @@ class Incidente:
 
     @staticmethod
     def from_dict(d: dict) -> "Incidente":
+        data_hora = d.get('data_hora')
         return Incidente(
             id=d['id'],
             titulo=d['titulo'],
             descricao=d['descricao'],
             severidade=d['severidade'],
             status=d['status'],
-            data_hora=datetime.fromisoformat(d['data_hora']),
+            data_hora=datetime.fromisoformat(data_hora) if data_hora else None,
             reportado_por=d['reportado_por'],
             local=d['local']
         )
@@ -99,14 +100,17 @@ class RelatorioIncidente:
 
     @staticmethod
     def from_dict(d: dict) -> "RelatorioIncidente":
+        data_fechamento = d.get('data_fechamento')
         return RelatorioIncidente(
             id=d['id'],
             incidente_id=d['incidente_id'],
             analista=d['analista'],
             conclusao=d['conclusao'],
             acoes=d['acoes'],
-            data_fechamento=datetime.fromisoformat(d['data_fechamento']),
-            anexos=d['anexos']
+            data_fechamento=(
+                datetime.fromisoformat(data_fechamento) if data_fechamento else None
+            ),
+            anexos=d.get('anexos', []),
         )
 
     def __str__(self) -> str:

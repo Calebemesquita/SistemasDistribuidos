@@ -1,5 +1,5 @@
 from typing import Optional
-from ..POJO import RelatorioIncidente
+from POJO import RelatorioIncidente
 
 
 class ServicoRelatorio:
