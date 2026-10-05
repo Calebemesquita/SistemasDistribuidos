@@ -5,9 +5,16 @@ Repositório com exercícios e trabalhos da disciplina.
 ## Conteúdo
 
 - [`labs/Lab_06_UDP_Ping/`](labs/Lab_06_UDP_Ping/): exercício de ping com UDP.
-- [`testes/`](testes/): treino de clientes e servidores TCP/UDP.
-- [`trabalhos/`](trabalhos/): exercícios e trabalhos.
-- [`trabalhos/trab1_v2/`](trabalhos/trab1_v2/): Trabalho 1, com streams, comunicação TCP e multicast. Instruções de execução estão no [README do trabalho](trabalhos/trab1_v2/README.md).
+- [`testes/`](testes/): exemplos de clientes e servidores TCP/UDP.
+- [`trabalhos/ping/`](trabalhos/ping/): exercício de ping.
+- [`trabalhos/trab_v1/`](trabalhos/trab_v1/): versão principal do Trabalho 1, com as questões 1, 2 e 3. Consulte o [README do trabalho](trabalhos/trab_v1/README.md) para detalhes e comandos.
+
 ## Trabalho 1
 
-Para executar os comandos documentados no README do Trabalho 1, entre em `trabalhos/` e siga as instruções daquele documento. O arquivo `trabalhos/trab1_v2/final.zip` é uma cópia do pacote de entrega.
+Para executar os comandos do Trabalho 1, entre na pasta do projeto principal:
+
+```bash
+cd trabalhos/trab_v1
+```
+
+Depois, siga as instruções do [README de `trab_v1`](trabalhos/trab_v1/README.md). Os comandos de execução e testes devem ser executados a partir dessa pasta.
