@@ -1,3 +1,4 @@
 from .pojo import Incidente, RelatorioIncidente
+from .registro import Registro, Serializavel
 
-__all__ = ["Incidente", "RelatorioIncidente"]
+__all__ = ["Serializavel", "Registro", "Incidente", "RelatorioIncidente"]
