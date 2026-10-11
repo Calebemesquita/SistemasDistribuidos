@@ -4,7 +4,6 @@ from datetime import datetime
 
 from POJO import Incidente, Registro, RelatorioIncidente, Serializavel
 
-
 class TesteModelos(unittest.TestCase):
     def test_hierarquia_abstrata(self) -> None:
         self.assertTrue(issubclass(Registro, Serializavel))
