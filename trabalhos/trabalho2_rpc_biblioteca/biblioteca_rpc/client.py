@@ -1,6 +1,7 @@
 """Cliente com proxy local de referência remota e doOperation."""
-from xmlrpc.client import ServerProxy, Binary
-from .protocol import make_request, decode_json, payload
+from xmlrpc.client import Binary, ServerProxy
+
+from .protocol import decode_json, make_request, payload
 
 
 class RPCError(RuntimeError):

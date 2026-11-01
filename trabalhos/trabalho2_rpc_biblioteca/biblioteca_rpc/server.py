@@ -1,8 +1,8 @@
 """Servidor XML-RPC; não instancia sockets diretamente no código do projeto."""
 from collections import OrderedDict
 from threading import RLock
-from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.client import Binary
+from xmlrpc.server import SimpleXMLRPCServer
 
 from .entities import Biblioteca, CanalNotificacoes
 from .protocol import decode_json, make_reply, payload
@@ -26,7 +26,7 @@ class RPCDispatcher:
         if not isinstance(request, dict) or not keys.issubset(request) or request["messageType"] != "Request":
             raise ValueError("Formato de requisição inválido")
         if not isinstance(request["arguments"], list):
-            raise ValueError("Argumentos inválidos")
+            raise TypeError("Argumentos inválidos")
         return request
 
     def sendReply(self, response: bytes) -> Binary:

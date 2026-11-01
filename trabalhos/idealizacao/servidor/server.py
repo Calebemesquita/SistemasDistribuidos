@@ -5,7 +5,6 @@ import threading
 from ..modelos.models import Ataque
 from ..servicos.sevice import ServicoRelatorios
 
-
 HOST, PORTA = "127.0.0.1", 5051
 servico = ServicoRelatorios()
 _lock_servico = threading.Lock()

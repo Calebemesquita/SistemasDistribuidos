@@ -4,9 +4,11 @@
 
 Disciplina: Sistemas Distribuídos — UFC, Campus de Quixadá
 
-**Integrantes:** [PREENCHER]
+**Integrantes:** 
+- Calebe Mesquita da Silva - 566342
+- Francisco Emilson Santos Souza Filho - Matrícula 565685
 
-**Repositório:** [PREENCHER URL DO GITHUB]
+**Repositório:** https://github.com/Calebemesquita/SistemasDistribuidos/tree/main/trabalhos/trabalho2_rpc_biblioteca
 
 ## 1. Objetivo
 
