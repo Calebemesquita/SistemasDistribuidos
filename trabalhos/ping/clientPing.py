@@ -1,6 +1,8 @@
 import socket
-import time
 import sys
+import threading
+import time
+
 
 class PingCliente:
     def __init__(self, ip_server, port, n):
@@ -10,21 +12,22 @@ class PingCliente:
         self.running = True
         self.rtt_list = []
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.socket.settimeout(1) 
+        self.on_finish_pings = threading.Event()
 
     def start(self, n):
         msg = f"Ping de {self.ip_server} na porta {self.port} \r\n"
         print(msg)
 
-        for seq in range(self.n):
-            self.send_one_ping(seq)
-            time.sleep(1)
+        self.send_one_ping(0)
+        self.on_finish_pings.wait()
 
         self.print_statistics()
         self.stop()
 
     def send_one_ping(self, num_seq):
         time_send = time.time()
-        msg = f"{self.ip_server} : {self.port}"
+        msg = f"PING {num_seq} {time_send}"
 
         try:
         
@@ -34,15 +37,21 @@ class PingCliente:
             
             time_recived = time.time()
             
-            rtt = (time_recived - time_recived) * 1000
+            rtt = (time_recived - time_send) * 1000
             self.rtt_list.append(rtt)
         
             reply = data.decode("utf-8").strip()
             print(f"ping {self.ip_server}:{self.port} seq={num_seq} rtt={rtt:.2f}")
-        
+
+
         except socket.timeout:
         
             print(f"ping {num_seq} falhou, timeout")
+
+        if num_seq < self.n - 1:
+            threading.Timer(1, self.send_one_ping, args=(num_seq + 1,)).start()
+        else:
+            self.on_finish_pings.set()
 
     
     def print_statistics(self):
@@ -56,12 +65,7 @@ class PingCliente:
               f"{perdidos_pct:.0f}% de perda")
 
         if self.rtt_list:
-            print(
-                f"rtt min/avg/max ="
-                f"{min(self.rtt_list)}"
-                f"{sum(self.rtt_list)}"
-                f"{max(self.rtt_list)}"
-            )
+            print(f"rtt min/avg/max = {min(self.rtt_list)}/{sum(self.rtt_list)/len(self.rtt_list)}/{max(self.rtt_list)}")
 
     def stop(self):
         if self.running == True:
