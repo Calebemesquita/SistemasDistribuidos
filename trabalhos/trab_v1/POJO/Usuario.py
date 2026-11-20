@@ -1,4 +1,5 @@
 from .registro import Registro
+
 #from enum import Enum
 
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+
 from .registro import Registro
 
 
@@ -38,7 +39,7 @@ class Notificacao(Registro):
         }
 
     @staticmethod
-    def from_dict(d: dict) -> "Notificacao":
+    def from_dict(d: dict) -> Notificacao:
         timestamp = d.get("timestamp")
         return Notificacao(
             id=d["id"], tipo=d["tipo"], mensagem=d["mensagem"],

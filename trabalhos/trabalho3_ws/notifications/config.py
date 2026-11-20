@@ -1,0 +1,3 @@
+EXCHANGE_NAME = "biblioteca.alertas"
+RABBITMQ_HOST = "127.0.0.1"
+RABBITMQ_PORT = 5672
