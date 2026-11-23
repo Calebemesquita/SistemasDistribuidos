@@ -3,30 +3,53 @@
 ## Organização
 
 - `api/`: aplicação FastAPI, modelos, rotas e serviços.
-- `clients/client_a/` e `clients/client_b/`: espaços reservados para os dois
-  clientes futuros; não contêm implementações ainda.
+- `clients/client_a/`: cliente Java para listar livros e solicitar empréstimos.
+- `clients/client_b/`: cliente Node.js para usar a API e receber notificações.
 - `notifications/`: publicação RabbitMQ pela API e listener de terminal.
 - `protocol/`: formato compartilhado das mensagens de notificação.
 - `legacy/`: cliente e servidor TCP antigos, mantidos como referência.
 - `tests/`: testes automatizados.
 
+## Pré-requisitos
+
+- Python 3.13 ou mais recente e [uv](https://docs.astral.sh/uv/) para a API e o
+  listener Python.
+- Node.js 18 ou mais recente e npm para o cliente Node.js.
+- JDK 11 ou mais recente para compilar o cliente Java.
+- RabbitMQ acessível em `127.0.0.1:5672` para criar empréstimos e receber
+  notificações. O projeto não inicia o broker automaticamente.
+
 ## Executar a API
 
-Na raiz do projeto:
+Na raiz de `trabalho3_ws/`, instale as dependências e inicie a API:
 
-```powershell
+```sh
+uv sync
 uv run uvicorn api.main:app --reload
 ```
 
-Abra `http://127.0.0.1:8000/docs`. Um empréstimo criado por `POST /loans/`
-publica uma notificação no exchange fanout `biblioteca.alertas`.
+Abra `http://127.0.0.1:8000/docs` para a documentação interativa. A API
+disponibiliza:
+
+- `GET /books/`: lista os livros e informa se estão disponíveis.
+- `GET /loans/`: lista os empréstimos do processo atual.
+- `POST /loans/`: cria um empréstimo. Exemplo de corpo JSON:
+  `{"book_id": 1, "username": "ana"}`.
+
+O POST responde `201` quando o empréstimo é criado, `400` quando o livro não
+existe ou já está emprestado e `503` quando o RabbitMQ está indisponível. Nesse
+último caso, a API desfaz o empréstimo. Os dados ficam em memória e são
+reiniciados quando a API reinicia.
+
+Um empréstimo criado por `POST /loans/` publica uma notificação no exchange
+fanout `biblioteca.alertas`.
 
 ## Ver notificações no terminal
 
-É necessário ter o RabbitMQ ativo e acessível em `127.0.0.1:5672`. Abra um
-terminal por assinante e execute, por exemplo:
+Com o RabbitMQ ativo e a partir da raiz de `trabalho3_ws/`, abra um terminal
+por assinante e execute, por exemplo:
 
-```powershell
+```sh
 uv run python -m notifications.listener ana
 uv run python -m notifications.listener bruno
 ```
@@ -34,11 +57,45 @@ uv run python -m notifications.listener bruno
 Cada listener declara automaticamente o exchange durável, a fila durável
 `alertas.<usuário>` e o vínculo entre eles. Inicie os listeners antes de criar
 um empréstimo para ver o evento aparecer nos terminais. Use `Ctrl+C` para
-encerrar cada listener.
+encerrar cada listener. O host e a porta do RabbitMQ usados pelo listener e
+pela API estão definidos em `notifications/config.py`.
 
-Se o RabbitMQ estiver indisponível, a API responde `503` e desfaz a criação do
-empréstimo em memória. Os dados da API são locais ao processo e reiniciar a
-aplicação os reinicializa.
+## Cliente Java
+
+O cliente Java lista livros e solicita empréstimos. Em um terminal:
+
+```sh
+cd clients/client_a
+javac Client.java
+java Client http://127.0.0.1:8000
+```
+
+O argumento com a URL da API é opcional; sem ele, o cliente usa
+`http://127.0.0.1:8000`. O nome enviado nos empréstimos está fixo como `ash` em
+`Client.java`. Este cliente não escuta notificações RabbitMQ.
+
+## Cliente Node.js
+
+O cliente Node.js oferece as mesmas ações HTTP do cliente Java e também pode
+escutar as notificações RabbitMQ do usuário configurado. Em um terminal:
+
+```sh
+cd clients/client_b
+npm install
+npm start -- http://127.0.0.1:8000 bruno
+```
+
+O primeiro argumento opcional é a URL da API e o segundo é o nome do usuário.
+Sem argumentos, o cliente usa `http://127.0.0.1:8000` e o usuário `node`. As
+configurações também podem ser fornecidas pelas variáveis `API_URL`,
+`LIBRARY_USERNAME` e `RABBITMQ_URL`. A opção 3 do menu inicia a escuta; a opção
+4 a encerra. A URL padrão do broker é `amqp://127.0.0.1:5672`; o publicador da
+API usa o host e a porta definidos em `notifications/config.py`.
+
+Cada usuário usa a fila durável `alertas.<usuário>` no exchange
+`biblioteca.alertas`, como o listener Python. Dois processos usando o mesmo
+usuário compartilham a fila e recebem as mensagens alternadamente. Use nomes
+de usuário diferentes se quiser que cada cliente receba sua própria cópia.
 
 ## Sistema legado
 
@@ -49,7 +106,7 @@ pela API usa o mesmo exchange RabbitMQ. Os formatos TCP antigos permanecem em
 
 ## Testes
 
-```powershell
+```sh
 uv run python -m unittest discover -s tests -t .
 ```
 
