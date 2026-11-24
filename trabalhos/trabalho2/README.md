@@ -1,8 +1,8 @@
 # Trabalho 2 — Biblioteca e notificações via RPC
 
-Implementação didática de comunicação cliente-servidor com requisição-resposta, `xmlrpc` da biblioteca padrão do Python e serialização JSON. **O projeto não cria sockets manualmente.** O transporte XML-RPC utiliza infraestrutura de rede da biblioteca padrão.
+Implementação didática de comunicação cliente-servidor com requisição-resposta, `xmlrpc` da biblioteca padrão do Python e serialização JSON. O código do projeto não cria sockets diretamente: o servidor XML-RPC da biblioteca padrão gerencia a conexão.
 
-> **Decisão arquitetural importante:** O Trabalho 1 exigia UDP multicast; o Trabalho 2 exige RPC/RMI e proíbe criar sockets. Aqui, a difusão de notificações foi reimplementada como **distribuição lógica para vários clientes por RPC**, por meio de inscrição e consultas periódicas (`polling`). Isso **não constitui multicast IP**. Confirme com o professor se ele exige multicast IP literal, pois esse aspecto é incompatível com a implementação apenas por RPC sem um serviço intermediário próprio de multicast.
+As notificações são distribuídas logicamente a vários clientes por RPC, usando inscrições e consultas periódicas (`polling`). Isso não é multicast IP.
 
 ## Requisitos
 
@@ -10,7 +10,13 @@ Python 3.10+; nenhuma dependência externa.
 
 ## Executar
 
-Abra terminais na raiz do projeto:
+A partir da raiz do repositório, entre na pasta do Trabalho 2:
+
+```bash
+cd trabalhos/trabalho2
+```
+
+Abra os terminais abaixo nessa pasta:
 
 **Terminal 1 — servidor**
 ```bash

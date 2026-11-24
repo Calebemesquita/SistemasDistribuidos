@@ -19,7 +19,13 @@ Q6/         votação TCP multithreaded e notas UDP multicast
 testes/     testes existentes das questões 1–3
 ```
 
-Execute os comandos na raiz do repositório. Se necessário, troque `python3` por `python`.
+Na raiz do repositório, entre na pasta do projeto:
+
+```bash
+cd trabalhos/trabalho1
+```
+
+Execute os comandos abaixo a partir de `trabalhos/trabalho1`. Se necessário, troque `python3` por `python`.
 
 ## Questão 1 — OutputStream de relatórios
 

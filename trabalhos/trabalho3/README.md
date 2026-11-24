@@ -1,4 +1,10 @@
-# Biblioteca
+# Trabalho 3 — Biblioteca
+
+Os comandos de API, notificações e testes devem ser executados a partir da raiz do projeto. Na raiz do repositório, entre nela com:
+
+```sh
+cd trabalhos/trabalho3
+```
 
 ## Organização
 
@@ -94,8 +100,9 @@ API usa o host e a porta definidos em `notifications/config.py`.
 
 Cada usuário usa a fila durável `alertas.<usuário>` no exchange
 `biblioteca.alertas`, como o listener Python. Dois processos usando o mesmo
-usuário compartilham a fila e recebem as mensagens alternadamente. Use nomes
-de usuário diferentes se quiser que cada cliente receba sua própria cópia.
+usuário competem pela mesma fila: cada mensagem é entregue a um consumidor,
+não copiada para os dois. Use nomes de usuário diferentes se quiser que cada
+cliente receba sua própria cópia.
 
 ## Sistema legado
 
