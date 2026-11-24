@@ -8,7 +8,7 @@ Disciplina: Sistemas Distribuídos — UFC, Campus de Quixadá
 - Calebe Mesquita da Silva - 566342
 - Francisco Emilson Santos Souza Filho - Matrícula 565685
 
-**Repositório:** https://github.com/Calebemesquita/SistemasDistribuidos/tree/main/trabalhos/trabalho2_rpc_biblioteca
+**Repositório:** https://github.com/Calebemesquita/SistemasDistribuidos/tree/main/trabalhos/trabalho2
 
 ## 1. Objetivo
 

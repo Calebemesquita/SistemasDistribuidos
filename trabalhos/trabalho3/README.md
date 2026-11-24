@@ -21,7 +21,7 @@
 
 ## Executar a API
 
-Na raiz de `trabalho3_ws/`, instale as dependências e inicie a API:
+Na raiz de `trabalho3/`, instale as dependências e inicie a API:
 
 ```sh
 uv sync
@@ -46,7 +46,7 @@ fanout `biblioteca.alertas`.
 
 ## Ver notificações no terminal
 
-Com o RabbitMQ ativo e a partir da raiz de `trabalho3_ws/`, abra um terminal
+Com o RabbitMQ ativo e a partir da raiz de `trabalho3/`, abra um terminal
 por assinante e execute, por exemplo:
 
 ```sh
