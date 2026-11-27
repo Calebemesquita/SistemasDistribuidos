@@ -1,9 +1,5 @@
-from dataclasses import dataclass
+"""Compatibility import for the shared library domain package."""
 
+from biblioteca_domain.models import Book
 
-@dataclass
-class Book:
-    id: int
-    title: str
-    author: str
-    available: bool = True
+__all__ = ["Book"]

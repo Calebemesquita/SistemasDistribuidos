@@ -1,5 +1,14 @@
 # Trabalho 3 — Biblioteca
 
+O pacote `biblioteca_domain/` contém os dataclasses e serviços de livros e
+empréstimos usados pelo servidor TCP legado do Trabalho 3. `legacy.domain/`
+preserva as importações do servidor antigo como aliases para esse domínio.
+`protocol/` fornece o formato de notificação compartilhado.
+O projeto é instalável localmente como `biblioteca-trabalho3`; preserve a pasta
+no repositório para que projetos locais possam resolver essa dependência por caminho.
+O Trabalho 4 reutiliza daqui somente o protocolo de eventos RabbitMQ; seu
+catálogo, histórico e papéis de usuário vêm do domínio do Trabalho 2.
+
 Os comandos de API, notificações e testes devem ser executados a partir da raiz do projeto. Na raiz do repositório, entre nela com:
 
 ```sh
@@ -12,6 +21,7 @@ cd trabalhos/trabalho3
 - `clients/client_a/`: cliente Java para listar livros e solicitar empréstimos.
 - `clients/client_b/`: cliente Node.js para usar a API e receber notificações.
 - `notifications/`: publicação RabbitMQ pela API e listener de terminal.
+- `biblioteca_domain/`: modelos e serviços reutilizáveis de livros e empréstimos.
 - `protocol/`: formato compartilhado das mensagens de notificação.
 - `legacy/`: cliente e servidor TCP antigos, mantidos como referência.
 - `tests/`: testes automatizados.

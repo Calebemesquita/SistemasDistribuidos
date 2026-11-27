@@ -22,6 +22,12 @@ class BookServiceTests(unittest.TestCase):
     def test_get_book_returns_none_for_unknown_id(self):
         self.assertIsNone(self.service.get_book(999))
 
+    def test_add_book_assigns_next_id(self):
+        book = self.service.add_book("Brás Cubas", "Machado de Assis")
+
+        self.assertEqual(book.id, 4)
+        self.assertIs(self.service.get_book(4), book)
+
 
 if __name__ == "__main__":
     unittest.main()

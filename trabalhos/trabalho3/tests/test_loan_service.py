@@ -49,6 +49,25 @@ class LoanServiceTests(unittest.TestCase):
         self.assertTrue(first_return)
         self.assertFalse(second_return)
 
+    def test_create_and_rollback_loan_preserves_domain_state(self):
+        loan = self.service.create_loan(1, "ana")
+        self.assertEqual(loan.id, 1)
+        self.assertFalse(self.books.get_book(1).available)
+
+        self.service.rollback_created_loan(loan)
+
+        self.assertEqual(self.service.list_loans(), [])
+        self.assertTrue(self.books.get_book(1).available)
+
+    def test_return_loan_and_rollback_return(self):
+        loan = self.service.create_loan(1, "ana")
+
+        self.assertIs(self.service.return_loan(loan.id), loan)
+        self.assertTrue(loan.returned)
+        self.service.rollback_returned_loan(loan)
+        self.assertFalse(loan.returned)
+        self.assertFalse(self.books.get_book(1).available)
+
 
 if __name__ == "__main__":
     unittest.main()
