@@ -6,7 +6,8 @@ Repositório com exercícios e trabalhos da disciplina.
 
 - [Trabalho 1](trabalhos/trabalho1/README.md): comunicação entre processos com streams, request/reply TCP, notificações multicast e votação. A cópia completa, antes chamada `trab_v1`, é a versão escolhida e está organizada em `trabalho1`; a cópia incompleta `trabalho` foi arquivada.
 - [Trabalho 2](trabalhos/trabalho2/README.md): biblioteca remota com RPC/XML-RPC e notificações por consultas periódicas.
-- [Trabalho 3](trabalhos/trabalho3/README.md): sistema de biblioteca com API FastAPI, clientes Java e Node.js e notificações RabbitMQ.
+- [Trabalho 3](trabalhos/trabalho3/README.md): biblioteca de domínio local e protocolo de notificações reutilizados nos exercícios seguintes.
+- [Trabalho 4](trabalhos/trabalho4/README.md): API REST com as entidades e agregados do Trabalho 2, protocolo RabbitMQ do Trabalho 3, clientes Java/Node.js e CLI HTTP para testar em máquinas distintas; inclui [relatório](trabalhos/trabalho4/RELATORIO.md) e [diagrama de arquitetura e classes](trabalhos/trabalho4/docs/ARQUITETURA.md).
 
 ## Exercícios e materiais de referência
 

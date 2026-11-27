@@ -1,0 +1,17 @@
+[project]
+name = "trabalho4-api"
+version = "0.1.0"
+description = "API REST para o sistema de biblioteca do Trabalho 4"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "biblioteca-rpc",
+    "biblioteca-trabalho3",
+    "fastapi[standard]>=0.164.0",
+    "pika>=1.4.4",
+    "pydantic>=2.14.3",
+]
+
+[tool.uv.sources]
+biblioteca-rpc = { path = "../../trabalho2", editable = true }
+biblioteca-trabalho3 = { path = "../../trabalho3", editable = true }
