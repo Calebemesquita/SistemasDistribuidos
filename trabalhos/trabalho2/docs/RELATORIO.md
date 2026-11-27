@@ -26,6 +26,10 @@ Herança: `Leitor` e `Bibliotecario` derivam de `Usuario`; `Alerta` e `Atualizac
 
 Agregações: `Biblioteca` contém `Catalogo` e `HistoricoEmprestimos`; `CanalNotificacoes` contém `Inscricoes` e uma coleção de notificações.
 
+As entidades estruturais implementam o protocolo `Serializavel` por meio de
+`para_dict()`. A função `serializar()` valida esse contrato e converte os
+objetos de domínio em dicionários JSON, inclusive os agregados aninhados.
+
 Métodos disponíveis via RPC: cadastro/listagem/empréstimo/devolução de livros, inscrição/cancelamento/consulta/publicação de notificações e obtenção da referência de um canal remoto.
 
 ## 4. Passagem por valor e referência

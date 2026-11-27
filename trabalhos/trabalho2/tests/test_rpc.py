@@ -1,7 +1,16 @@
 import unittest
 from xmlrpc.client import Binary
 from biblioteca_rpc.client import RPCClient, RPCError
-from biblioteca_rpc.entities import Alerta, Atualizacao, Leitor, Usuario, Bibliotecario, Notificacao
+from biblioteca_rpc.entities import (
+    Alerta,
+    Atualizacao,
+    Bibliotecario,
+    Leitor,
+    Notificacao,
+    Serializavel,
+    Usuario,
+    serializar,
+)
 from biblioteca_rpc.protocol import make_request, decode_json, payload
 from biblioteca_rpc.server import RPCDispatcher
 
@@ -26,6 +35,22 @@ class Tests(unittest.TestCase):
         self.assertIsInstance(Bibliotecario("2", "Bia"), Usuario)
         self.assertIsInstance(Alerta(1, "X", "hoje"), Notificacao)
         self.assertIsInstance(Atualizacao(1, "X", "hoje"), Notificacao)
+
+    def test_serializavel_cobre_todas_as_agregacoes(self):
+        self.biblioteca.call(
+            "cadastrar_livro",
+            livro={"isbn": "42", "titulo": "Duna", "autor": "Frank Herbert"},
+        )
+        self.canal.call("inscrever", cliente_id="ana", nome="Ana")
+        self.biblioteca.call("emprestar_livro", isbn="42", leitor_id="ana")
+
+        self.assertIsInstance(self.dispatcher.biblioteca, Serializavel)
+        state = serializar(self.dispatcher.biblioteca)
+        self.assertEqual(state["catalogo"]["42"]["titulo"], "Duna")
+        self.assertEqual(state["historico"]["registros"][0]["leitor_id"], "ana")
+        self.assertEqual(state["usuarios"]["ana"]["emprestimos"], ["42"])
+        self.assertEqual(state["canal"]["inscricoes"]["ana"], "Ana")
+        self.assertEqual(state["canal"]["notificacoes"][0]["tipo"], "ATUALIZACAO")
 
     def test_referencia_remota(self):
         self.assertEqual(self.canal.remote_ref, "notificacoes")

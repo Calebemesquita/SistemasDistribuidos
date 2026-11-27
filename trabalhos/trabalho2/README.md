@@ -6,7 +6,8 @@ As notificações são distribuídas logicamente a vários clientes por RPC, usa
 
 ## Requisitos
 
-Python 3.10+; nenhuma dependência externa.
+Python 3.10+; nenhuma dependência externa em tempo de execução. A instalação
+como pacote local usa o backend de build `hatchling`.
 
 ## Executar
 
@@ -77,7 +78,13 @@ O campo `arguments` contém a lista dos bytes da representação JSON UTF-8. A r
 - Entidades: `Usuario`, `Leitor`, `Bibliotecario`, `Livro`, `Notificacao`, `Alerta`, `Atualizacao`, `Catalogo`, `HistoricoEmprestimos`, `Inscricoes`.
 - Herança 1: `Leitor` **é um** `Usuario`; herança 2: `Bibliotecario` **é um** `Usuario`. Há ainda `Alerta` e `Atualizacao` herdando de `Notificacao`.
 - Agregação 1: `Biblioteca` **tem um** `Catalogo`; agregação 2: `Biblioteca` **tem um** `HistoricoEmprestimos`. `CanalNotificacoes` agrega `Inscricoes` e uma lista de notificações.
+- `Serializavel` define o contrato `para_dict()`. As entidades e agregados implementam esse protocolo estrutural, e `serializar()` verifica e converte objetos para dicionários JSON.
 - Métodos remotos: `cadastrar_livro`, `listar_livros`, `emprestar_livro`, `devolver_livro`, `obter_canal`, `inscrever`, `cancelar_inscricao`, `publicar`, `consultar`.
+
+O Trabalho 4 instala este projeto como pacote local e usa `Biblioteca`, os
+papéis de usuário, o catálogo, o histórico e o canal como domínio compartilhado
+pela API. Veja o [diagrama de classes do Trabalho 4](../trabalho4/docs/ARQUITETURA.md)
+para acompanhar essa ligação.
 
 ## Limitações conscientes
 
